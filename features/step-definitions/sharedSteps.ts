@@ -1,5 +1,6 @@
 import { Given, When, Then } from "@wdio/cucumber-framework";
 import { $, browser } from "@wdio/globals";
+import { expect } from "chai";
 
 const submitBtn = $(
   "//input[@type='submit' and @value='Send to Customer Care']"
@@ -98,6 +99,7 @@ Then(/^verify and select dropdown options$/, async () => {
 });
 
 When(/^clickon the Checkboxmenu$/, async () => {
+  await browser.url("https://the-internet.herokuapp.com/checkboxes");
   const checkBoxMenu = await $("//a[text()='Checkboxes']");
   await checkBoxMenu.click();
 });
@@ -113,4 +115,54 @@ Then(/^select the checkboxes that are unselected and vice versa$/, async () => {
     }
     await browser.pause(2000);
   }
+});
+
+When(/^the uploading file is selected and uploaded$/, async () => {
+  await browser.url("https://the-internet.herokuapp.com/upload");
+  const fileLocation = "C:/Users/ACER/Downloads/samplefile.pdf";
+  const uploadFile = await browser.uploadFile(fileLocation);
+  const uploadLocator = $("//input[@id='file-upload']");
+  await uploadLocator.setValue(uploadFile);
+  const uploadBtn = $("//input[@id='file-submit']");
+  await uploadBtn.click();
+});
+
+Then(/^Verify the navigation and success msg$/, async () => {
+  const successMsg = $("//h3[text()='File Uploaded!']");
+  await successMsg.waitForDisplayed();
+  const successMsgText = await successMsg.getText();
+  await expect(successMsgText).toEqual("File Uploaded!");
+});
+
+Given(/^launch and login with saucedemo credentials$/, async () => {
+  await browser.url("https://www.saucedemo.com/v1/");
+  const userName = $("//input[@data-test='username']");
+  const passWord = $("//input[@data-test='password']");
+  const submitBtn = $("//input[@type='submit']");
+  await userName.setValue("standard_user");
+  await passWord.setValue("secret_sauce");
+  await submitBtn.click();
+  const productDiv = $("//div[text()='Products']");
+  await productDiv.waitForDisplayed();
+});
+
+Then(/^verify the inventory item (.*)$/, async (noOfProducts) => {
+  if (!noOfProducts)
+    throw Error(`Invalid inventory products : ${noOfProducts}`);
+  const productName = await $$("//div[@class='inventory_item_name']");
+  await expect(productName.length).to.equal(parseInt(noOfProducts));
+});
+
+Then(/^verify the price values greater than 0$/, async () => {
+  const priceArr = $$("//div[@class='inventory_item_price']");
+  const priceStrArr = [];
+  for (let i = 0; i < (await priceArr.length); i++) {
+    let priceStrText = await priceArr[i].getText();
+    priceStrArr.push(priceStrText);
+  }
+  //removing the $ in price element
+  let priceNumArr = priceStrArr.map((ele) => parseInt(ele.replace("$", "")));
+  //checking the value greater than 0
+  let invalidPriceArr = priceNumArr.filter((ele) => ele <= 0);
+  expect(invalidPriceArr.length).to.equal(0);
 });
