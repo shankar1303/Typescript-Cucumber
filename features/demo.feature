@@ -1,5 +1,5 @@
 Feature: To search and launch a website from Google
-  @demo
+
   Scenario Outline: To launch Google page, search, and click on the first result
     Given launch Google URL
     When I enter the <word> in search box

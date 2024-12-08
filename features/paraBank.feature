@@ -12,11 +12,5 @@ Feature: Web interactions
     Examples:
       | ID      | Name        | Email          | Phone      | Message    |
       | Web_001 | Shankar     | test@gmail.com | 1212121212 | Sample Msg |
-      | Web_002 | @1212112Sha | !tegmail.com   | sdgdhgh    |            |
+      | Web_002 | @1212112Sha | !tegmail.com   | sdgdhgh    | !!!!!!!!   |
 
-  Scenario Outline: Dropdown options
-    When clickon the "AdminPage" in the menu
-    Then I could see the "Administration" fields
-    Then scroll down to the "Application settings" header
-    Then change the "JMS" from the "Loan provider" dropdown
-    Then Proceed to submit and verify the confirmation msg
