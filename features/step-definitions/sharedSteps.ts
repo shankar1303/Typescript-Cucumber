@@ -25,7 +25,7 @@ Then(/^I should see the first result and click on it$/, async () => {
 
 Then(/^Verify the (.*) is correct$/, async (expectUrl) => {
   const browserUrl = await browser.getUrl();
-  await expect(browserUrl).toBe(expectUrl);
+  await expect(browserUrl).to.equal(expectUrl);
   await browser.pause(2000);
 });
 
@@ -42,7 +42,7 @@ When(/^I clickon the mail icon under Welcome ParaBank$/, async () => {
   await cusCareText.waitForDisplayed();
   const browserUrl = await browser.getUrl();
   browser.pause(2000);
-  await expect(browserUrl).toContain(
+  await expect(browserUrl).to.contain(
     "https://parabank.parasoft.com/parabank/contact.htm"
   );
 });
@@ -80,7 +80,7 @@ Given(/^Launch the Internet herokuapp website$/, async () => {
   await browser.url("https://the-internet.herokuapp.com/");
   await browser.pause(5000);
   const assertUrl = await browser.getUrl();
-  await expect(assertUrl).toContain("the-internet.herokuapp.com");
+  await expect(assertUrl).to.contain("the-internet.herokuapp.com");
 });
 
 When(/^clickon the Dropdown menu$/, async () => {
@@ -131,7 +131,7 @@ Then(/^Verify the navigation and success msg$/, async () => {
   const successMsg = $("//h3[text()='File Uploaded!']");
   await successMsg.waitForDisplayed();
   const successMsgText = await successMsg.getText();
-  await expect(successMsgText).toEqual("File Uploaded!");
+  await expect(successMsgText).to.equal("File Uploaded!");
 });
 
 Given(/^launch and login with saucedemo credentials$/, async () => {
