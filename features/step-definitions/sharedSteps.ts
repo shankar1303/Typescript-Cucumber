@@ -1,5 +1,7 @@
 import { Given, When, Then } from "@wdio/cucumber-framework";
 import { $, browser, expect } from "@wdio/globals";
+import { HerokuPage } from "../pageobjects/heroku.page";
+const herokuPage = new HerokuPage();
 const submitBtn = $(
   "//input[@type='submit' and @value='Send to Customer Care']"
 );
@@ -9,8 +11,7 @@ Given(/^launch Google URL$/, async () => {
 });
 
 When(/^I enter the (.*) in search box$/, async (word) => {
-  const keyword = $('[name="q"]');
-  await expect(keyword).toBeDisplayed();
+  const keyword = $("//textarea[@class='gLFyf']");
   await keyword.setValue(word);
   await browser.keys("Enter");
 });
@@ -70,59 +71,34 @@ Then(/^Proceed to clickon the submit button$/, async () => {
 });
 
 Given(/^Launch the Internet herokuapp website$/, async () => {
-  await browser.url("https://the-internet.herokuapp.com/");
-  await expect(browser).toHaveUrl(
-    expect.stringContaining("the-internet.herokuapp.com")
-  );
+  await herokuPage.open();
 });
 
 When(/^clickon the Dropdown menu$/, async () => {
-  const dropDownMenu = $("//a[text()='Dropdown']");
-  await dropDownMenu.click();
-  await browser.pause(2000);
+  await herokuPage.goToDropdownMenu();
 });
 
 Then(/^verify and select dropdown options$/, async () => {
-  const listOfOpt = await $$("//select/option");
-
-  for (let optionElement of listOfOpt) {
-    await $("//select").selectByVisibleText(await optionElement.getText());
-  }
+  await herokuPage.selectDropdownOptions();
 });
 
 When(/^clickon the Checkboxmenu$/, async () => {
-  await browser.url("https://the-internet.herokuapp.com/");
-  const checkBoxMenu = $("//a[text()='Checkboxes']");
-  await expect(checkBoxMenu).toBeDisplayed();
-  await checkBoxMenu.click();
+  await herokuPage.goToCheckboxMenu();
 });
 
 Then(/^select the checkboxes that are unselected and vice versa$/, async () => {
-  const checkBoxList = await $$("//form//input[@type='checkbox']");
-  for (let ele of checkBoxList) {
-    await expect(ele).toBeDisplayed();
-    if (!(await ele.isSelected())) {
-      await ele.click();
-    } else {
-      await ele.click();
-    }
-  }
+  await herokuPage.toggleCheckboxes();
 });
 
 When(/^the uploading file is selected and uploaded$/, async () => {
   await browser.url("https://the-internet.herokuapp.com/upload");
-  const fileLocation = "C:/Users/ACER/Downloads/samplefile.pdf";
-  const uploadFile = await browser.uploadFile(fileLocation);
-  const uploadLocator = $("//input[@id='file-upload']");
-  await uploadLocator.setValue(uploadFile);
-  const uploadBtn = $("//input[@id='file-submit']");
-  await uploadBtn.click();
+  const uploadFile = await browser.uploadFile(herokuPage.fileLocation);
+  await herokuPage.fileUploadInput.setValue(uploadFile);
+  await herokuPage.fileSubmitButton.click();
 });
 
 Then(/^Verify the navigation and success msg$/, async () => {
-  const successMsg = $("//h3[text()='File Uploaded!']");
-  await expect(successMsg).toBeDisplayed();
-  await expect(successMsg).toHaveText("File Uploaded!");
+  await herokuPage.verifyFileUploadSuccess();
 });
 
 Given(/^launch and login with saucedemo credentials$/, async () => {

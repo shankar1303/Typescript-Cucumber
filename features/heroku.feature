@@ -1,4 +1,6 @@
-Feature: Heroku website
+@demo
+
+Feature: Heroku website Interaction
 
     Background: Heroku website
         Given Launch the Internet herokuapp website
