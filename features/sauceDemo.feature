@@ -1,6 +1,5 @@
 Feature: Saucedemo page
 
-    @current
     Scenario: Product verification in saucedemo
         Given launch and login with saucedemo credentials
         Then verify the inventory item <count>
